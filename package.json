@@ -1,0 +1,25 @@
+{
+  "name": "stasis",
+  "version": "0.0.0",
+  "description": "Caching with a flexible invalidation strategy",
+  "main": "stasis.js",
+  "dependencies": {},
+  "devDependencies": {
+    "mocha": "*"
+  },
+  "scripts": {
+    "test": "make test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/cpsubrian/node-stasis.git"
+  },
+  "homepage": "https://github.com/cpsubrian/node-stasis",
+  "keywords": [
+    "cache",
+    "invalidation",
+    "redis"
+  ],
+  "author": "Brian Link <cpsubrian@gmail.com>",
+  "license": "MIT"
+}
