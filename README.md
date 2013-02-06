@@ -13,29 +13,6 @@ The oft-tweeted quote above, while mostly just a humorous anecdote, can often
 feel like reality. **Stow** aims to solve both problems with an easy-to-remember
 name and a caching API built around tag-based invalidation.
 
-Features
---------
-
-1. Cache data with optional meta-data:
-    - TTL
-    - Tags
-        - Tag->Key combos identify objects in your application.
-        - Example: `{'user': 42, 'post': 5, 'tweet': 'As5dhiwy9dKHiK'}`
-2. Retrieve cached data with a cache key.  Example: `comment:formatted:174`
-    - Cache retrieval will 'miss' for:
-        - Expired items
-        - Items whose cache tags have been invalidated
-3. Invalidate cache tags in your app logic where appropriate, for example:
-    - User gets updated
-    - Comment gets deleted
-    - Formatting options for a comment change
-4. Manually clear cached data by cache key (with support for wildcards).
-5. Pluggable cache backends:
-    - Memory (for small apps or testing)
-    - Redis **(for production)**
-    - *[Your compatible backend here]*
-
-
 Usage
 -----
 
@@ -43,7 +20,9 @@ Usage
 var stow = require('stow');
 
 // Create your cache.
-var cache = stow.createCache();
+var cache = stow.createCache({
+  backend: stow.RedisBackend()
+});
 
 // Add items to the cache.
 cache.set('my:cache:key', 'my data', {'user': 47, 'comment': [4, 82, 199]}, function (err) {
