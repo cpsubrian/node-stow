@@ -89,42 +89,48 @@ Reference to the Backend instance for this cache.
 Add items to the cache.
 
 - `options`
-    - `key` -
-    - `data` -
-    - `ttl` -
-    - `tags` -
-- `cb` -
+    - `key` - A unique string identifying the cached item.
+    - `data` - The data you wish to cache. Will be serialized via [hydration](https://github.com/carlos8f/hydration).
+    - `ttl` - Time until cache expires (in seconds). Defaults to 0 (unlimited).
+    - `tags` - An Object containing the tags to associate with this cached item.
+- `cb (err)` - Called after the item has been cached.
 
 ##### cache.set ( key, data, [ttl], [tags], cb)
 
 Add items to the cache (alternative syntax).
 
-- `key` -
-- `data` -
-- `ttl` -
-- `tags` -
-- `cb` -
+- `key` - A unique string identifying the cached item.
+- `data` - The data you wish to cache. Will be serialized via [hydration](https://github.com/carlos8f/hydration).
+- `ttl` - Time until cache expires (in seconds). Defaults to 0 (unlimited).
+- `tags` - An Object containing the tags to associate with this cached item.
+- `cb (err)` - Called after the item has been cached.
 
 ##### cache.get ( key, cb )
 
 Retrieve items from the cache.
 
-- `key` -
-- `cb` -
+- `key` - A unique string identifying the cached item.
+- `cb (err, result)` - Called when the item has been retrieved.
+    - `err` - The retrieval error, if any.
+    - `result` - The cached item along with cache metadata.
+        - `result.data` - Your cached data, unserialized.
 
 ##### cache.invalidate ( tags, cb )
 
 Invalidate cached items if they were tagged with ANY of the passed tags.
 
-- `tags` -
-- `cb` -
+- `tags` - An Object containing the tags to invalidate.
+- `cb (err)` - Called after the invalidation is complete.
 
 ##### cache.clear ( [key] , cb)
 
 Clear items from the cache by key or wildcard key pattern.
 
-- `key` -
-- `cb` -
+- `key` - A string identidying the item to clear, or a wildcard pattern that will
+  clear multiple cached items. Examples: `my:cache:key`, `users:*`, `*:formatted:*`.
+  **WARNING**: Depending on the backend used and the size of your cache, wildcard
+  clears can be quite slow and expensive. Use with care.
+- `cb (err)` - Called after the clear is complete.
 
 
 Backends
@@ -132,7 +138,7 @@ Backends
 
 Backends are responsible for storage, retrieval and invalidation. Stow ships with
 a memory backend for testing and a Redis backend for production use.  If
-you wish to create another backend please checkout the [Backend Spec](https://github.com/cpsubrian/node-stow/blob/master/BACKEND.md).
+you wish to create another backend please check out the [Backend Spec](https://github.com/cpsubrian/node-stow/blob/master/BACKEND.md).
 
 ### Memory Backend
 
