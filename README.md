@@ -14,7 +14,7 @@ feel like reality. **Stow** aims to solve both problems with an easy-to-remember
 name and a caching API built around tag-based invalidation.
 
 Features
-========
+--------
 
 1. Cache data in a named bin along with optional meta-data:
     - Expiration
@@ -36,23 +36,23 @@ Features
 
 
 Usage
-=====
+-----
 
 Usage example here.
 
 
 API
-===
+---
 
 Full API here.
 
 Backends
-========
+--------
 
 Document cache backends (memory, redis, etc.) here.
 
 Credits
-=======
+-------
 
 **Stow** is based on the excellent Drupal cache module: [CacheTags](http://drupal.org/project/cachetags).
 The invalidation strategy used in both Stow and CacheTags has been in successful,
