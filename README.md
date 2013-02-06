@@ -76,35 +76,39 @@ An object containing stow's bundled backends classes.
 
 Class that exposes the public cache methods.
 
-#### Methods
+- Properties
 
-**cache.set ( options , cb )**
+    - `cache.backend` - Reference to the Backend instance for this cache.
 
-- `options` -
-- `cb` -
+- Methods
 
-**cache.set ( key, data, [ttl], [tags], cb)**
+    - `cache.set ( options , cb )`
 
-- `key` -
-- `data` -
-- `ttl` -
-- `tags` -
-- `cb` -
+        - `options` -
+        - `cb` -
 
-**cache.get ( key, cb )**
+    - `cache.set ( key, data, [ttl], [tags], cb)`
 
-- `key` -
-- `cb` -
+        - `key` -
+        - `data` -
+        - `ttl` -
+        - `tags` -
+        - `cb` -
 
-**cache.invalidate ( tags, cb )**
+    - `cache.get ( key, cb )`
 
-- `tags` -
-- `cb` -
+        - `key` -
+        - `cb` -
 
-**cache.clear ( [key] , cb)**
+    - `cache.invalidate ( tags, cb )`
 
-- `key` -
-- `cb` -
+        - `tags` -
+        - `cb` -
+
+    - `cache.clear ( [key] , cb)`
+
+        - `key` -
+        - `cb` -
 
 
 Backends
