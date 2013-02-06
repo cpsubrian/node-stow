@@ -78,35 +78,31 @@ Class that exposes the public cache methods.
 
 - Properties
 
-    - `cache.backend` - Reference to the Backend instance for this cache.
+    - #### `cache.backend`
+        - Reference to the Backend instance for this cache.
 
 - Methods
 
-    - `cache.set ( options , cb )`
-
+    - #### `cache.set ( options , cb )`
         - `options` -
         - `cb` -
 
-    - `cache.set ( key, data, [ttl], [tags], cb)`
-
+    - #### `cache.set ( key, data, [ttl], [tags], cb)`
         - `key` -
         - `data` -
         - `ttl` -
         - `tags` -
         - `cb` -
 
-    - `cache.get ( key, cb )`
-
+    - #### `cache.get ( key, cb )`
         - `key` -
         - `cb` -
 
-    - `cache.invalidate ( tags, cb )`
-
+    - #### `cache.invalidate ( tags, cb )`
         - `tags` -
         - `cb` -
 
-    - `cache.clear ( [key] , cb)`
-
+    - #### `cache.clear ( [key] , cb)`
         - `key` -
         - `cb` -
 
