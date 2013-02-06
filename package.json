@@ -1,8 +1,8 @@
 {
-  "name": "stasis",
+  "name": "stow",
   "version": "0.0.0",
   "description": "Caching with a flexible invalidation strategy",
-  "main": "stasis.js",
+  "main": "stow.js",
   "dependencies": {},
   "devDependencies": {
     "mocha": "*"
@@ -12,9 +12,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/cpsubrian/node-stasis.git"
+    "url": "git://github.com/cpsubrian/node-stow.git"
   },
-  "homepage": "https://github.com/cpsubrian/node-stasis",
+  "homepage": "https://github.com/cpsubrian/node-stow",
   "keywords": [
     "cache",
     "invalidation",

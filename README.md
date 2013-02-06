@@ -1,9 +1,9 @@
-stasis
-======
+stow
+====
 
 Node.js caching with a flexible invalidation strategy.
 
-[![build status](https://secure.travis-ci.org/cpsubrian/node-stasis.png)](http://travis-ci.org/cpsubrian/node-stasis)
+[![build status](https://secure.travis-ci.org/cpsubrian/node-stow.png)](http://travis-ci.org/cpsubrian/node-stow)
 
 
 
