@@ -16,8 +16,8 @@ name and a caching API built around tag-based invalidation.
 Features
 --------
 
-1. Cache data in a named bin along with optional meta-data:
-    - Expiration
+1. Cache data with optional meta-data:
+    - TTL
     - Tags
         - Tag->Key combos identify objects in your application.
         - Example: `{'user': 42, 'post': 5, 'tweet': 'As5dhiwy9dKHiK'}`
@@ -25,21 +25,46 @@ Features
     - Cache retrieval will 'miss' for:
         - Expired items
         - Items whose cache tags have been invalidated
-3. Invalidate cache tags in your app logic where appropriate
-    - Examples:
-        - User gets updated
-        - Comment gets deleted
-        - Formatting options for a comment change
-4. If neccesarry, you can clear all cached data:
-    - Per bin
-    - With a cache key RegExp
+3. Invalidate cache tags in your app logic where appropriate, for example:
+    - User gets updated
+    - Comment gets deleted
+    - Formatting options for a comment change
+4. Manually clear cached data by cache key (with support for wildcards).
+5. Pluggable cache backends:
+    - Memory (for small apps or testing)
+    - Redis **(for production)**
+    - *[Your compatible backend here]*
 
 
 Usage
 -----
 
-Usage example here.
+```js
+var stow = require('stow');
 
+// Create your cache.
+var cache = stow.createCache();
+
+// Add items to the cache.
+cache.set('my:cache:key', 'my data', {'user': 47, 'comment': [4, 82, 199]}, function (err) {
+
+});
+
+// Retreive from the cache.
+cache.get('my:cache:key', function (err, data) {
+
+});
+
+// Invalidate items based on a tag or tags.
+cache.invalidate({'user': 47}, function (err) {
+  // Cached data 'tagged' with user 47 was invalidated.
+});
+
+// Clear items (using wildcard)
+cache.clear('my:cache:*', function (err) {
+
+});
+```
 
 API
 ---
