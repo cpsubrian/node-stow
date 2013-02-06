@@ -88,7 +88,11 @@ Reference to the Backend instance for this cache.
 
 Add items to the cache.
 
-- `options` -
+- `options`
+    - `key` -
+    - `data` -
+    - `ttl` -
+    - `tags` -
 - `cb` -
 
 ##### cache.set ( key, data, [ttl], [tags], cb)
@@ -126,7 +130,47 @@ Clear items from the cache by key or wildcard key pattern.
 Backends
 --------
 
-Document cache backends (memory, redis, etc.) here.
+Backends are responsible for storage, retrieval and invalidation. Stow ships with
+a memory backend for testing and a Redis backend for production use.  If
+you wish to create another backend please checkout the [Backend Spec](https://github.com/cpsubrian/node-stow/blob/master/BACKEND.md).
+
+### Memory Backend
+
+The memory backend stores the cache in your node process' local memory space.
+This backend is suitable for testing and development but has not been optimized
+for performance or long-term use.
+
+```js
+var stow = require('stow')
+  , options = {}
+  , cache = stow.createCache(stow.backends.memory, options);
+```
+
+Options:
+
+- `ttl` - Default TTL to use for ALL cached items. Can be overriden per cache
+  set. Defaults to 0 (unlimited).
+
+### Redis Backend
+
+The Redis backend stores cached items in Redis via [haredis](https://github.com/carlos8f/haredis).
+It uses TTL support baked into Redis and is otherwise optimized for production use.
+
+```js
+var stow = require('stow')
+  , options = {
+      nodes: ['localhost:6379']
+    }
+  , cache = stow.createCache(stow.backends.redis, options);
+```
+
+Options:
+
+- `nodes` - The backend will create a redis client connected these nodes.
+  Supports all node formats that haredis does.
+- `client` - Overrides `nodes`. The backend will use this redis client.
+- `ttl` - Default TTL to use for ALL cached items. Can be overriden per cache
+  set. Defaults to 0 (unlimited).
 
 Credits
 -------
