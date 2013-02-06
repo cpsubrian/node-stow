@@ -79,15 +79,22 @@ Class that exposes the public cache methods.
 #### Properties
 
 ##### `cache.backend`
-    - Reference to the Backend instance for this cache.
+
+Reference to the Backend instance for this cache.
 
 #### Methods
 
 ##### `cache.set ( options , cb )`
+
+Add items to the cache.
+
 - `options` -
 - `cb` -
 
 ##### `cache.set ( key, data, [ttl], [tags], cb)`
+
+Add items to the cache (alternative syntax).
+
 - `key` -
 - `data` -
 - `ttl` -
@@ -95,14 +102,23 @@ Class that exposes the public cache methods.
 - `cb` -
 
 ##### `cache.get ( key, cb )`
+
+Retrieve items from the cache.
+
 - `key` -
 - `cb` -
 
 ##### `cache.invalidate ( tags, cb )`
+
+Invalidate cached items if they were tagged with ANY of the passed tags.
+
 - `tags` -
 - `cb` -
 
 ##### `cache.clear ( [key] , cb)`
+
+Clear items from the cache by key or wildcard key pattern.
+
 - `key` -
 - `cb` -
 
