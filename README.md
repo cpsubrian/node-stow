@@ -57,7 +57,55 @@ cache.clear('my:cache:*', function (err) {
 API
 ---
 
-Full API here.
+### stow.createCache ( backend , [options] )
+
+- `backend` - The backend class to use.
+- `options` - Constructor options passed to the backend when it is created.
+- **returns** an instance of `stow.Cache`.
+
+```js
+  var stow = require('stow')
+    , cache = stow.createCache(stow.backends.memory, {ttl: 3600});
+```
+
+### stow.backends
+
+An object containing stow's bundled backends classes.
+
+### stow.Cache (Class)
+
+Class that exposes the public cache methods.
+
+#### Methods
+
+**cache.set ( options , cb )**
+
+- `options` -
+- `cb` -
+
+**cache.set ( key, data, [ttl], [tags], cb)**
+
+- `key` -
+- `data` -
+- `ttl` -
+- `tags` -
+- `cb` -
+
+**cache.get ( key, cb )**
+
+- `key` -
+- `cb` -
+
+**cache.invalidate ( tags, cb )**
+
+- `tags` -
+- `cb` -
+
+**cache.clear ( [key] , cb)**
+
+- `key` -
+- `cb` -
+
 
 Backends
 --------
