@@ -20,21 +20,30 @@ Usage
 var stow = require('stow');
 
 // Create your cache.
-var cache = stow.createCache({
-  backend: new stow.RedisBackend(['localhost:6379'])
+var cache = stow.createCache(stow.backends.redis, {
+  nodes: ['localhost:6379']
 });
 
 // Add items to the cache.
 cache.set('my:cache:key', 'my data', {'user': 47, 'comment': [4, 82, 199]}, function (err) {
 
 });
-
-// Retreive from the cache.
-cache.get('my:cache:key', function (err, data) {
+// Or use an options hash.
+cache.set({
+  key: 'my:cache:key',
+  data: {my: 'data'},
+  ttl: 3600 * 24, // TTL in seconds
+  tags: {user: 52}
+}, function (err) {
 
 });
 
-// Invalidate items based on a tag or tags.
+// Retreive from the cache.
+cache.get('my:cache:key', function (err, result) {
+  // result.data contains your data.
+});
+
+// Invalidate items based on one or more tag(s).
 cache.invalidate({'user': 47}, function (err) {
   // Cached data 'tagged' with user 47 was invalidated.
 });
