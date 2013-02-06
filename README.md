@@ -59,8 +59,8 @@ Credits
 -------
 
 **Stow** is based on the excellent Drupal cache module: [CacheTags](http://drupal.org/project/cachetags).
-The invalidation strategy used in both Stow and CacheTags has been in successful,
-high-traffic production deployments for over 2 years.
+The invalidation strategy used in CacheTags has been in successful,
+high-traffic production deployments with millions of objects for more than 2 years.
 
 - - -
 
