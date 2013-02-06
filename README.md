@@ -76,22 +76,22 @@ An object containing stow's bundled backends classes.
 
 Class that exposes the public cache methods.
 
-#### Properties
+#### Instance Properties
 
-##### `cache.backend`
+##### cache.backend
 
 Reference to the Backend instance for this cache.
 
-#### Methods
+#### Instance Methods
 
-##### `cache.set ( options , cb )`
+##### cache.set ( options , cb )
 
 Add items to the cache.
 
 - `options` -
 - `cb` -
 
-##### `cache.set ( key, data, [ttl], [tags], cb)`
+##### cache.set ( key, data, [ttl], [tags], cb)
 
 Add items to the cache (alternative syntax).
 
@@ -101,21 +101,21 @@ Add items to the cache (alternative syntax).
 - `tags` -
 - `cb` -
 
-##### `cache.get ( key, cb )`
+##### cache.get ( key, cb )
 
 Retrieve items from the cache.
 
 - `key` -
 - `cb` -
 
-##### `cache.invalidate ( tags, cb )`
+##### cache.invalidate ( tags, cb )
 
 Invalidate cached items if they were tagged with ANY of the passed tags.
 
 - `tags` -
 - `cb` -
 
-##### `cache.clear ( [key] , cb)`
+##### cache.clear ( [key] , cb)
 
 Clear items from the cache by key or wildcard key pattern.
 
