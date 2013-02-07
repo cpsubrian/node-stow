@@ -107,7 +107,44 @@ testBackend = function (Backend, options) {
         assert.ifError(err);
         cache.get(options.key, function (err, result) {
           assert.ifError(err);
-          assert.strictEqual(result.data, options.data);
+          assert.equal(result.data, options.data);
+          done();
+        });
+      });
+    });
+  });
+
+  it('should clear by key', function (done) {
+    var options = {
+      key: 'test',
+      data: 'foo',
+      tags: {bar: 'baz'}
+    };
+    cache.set(options, function (err) {
+      assert.ifError(err);
+      cache.clear(options.key, function (err) {
+        assert.ifError(err);
+        cache.get(options.key, function (err, result) {
+          assert.ifError(err);
+          assert.strictEqual(result, false);
+          done();
+        });
+      });
+    });
+  });
+  it('should clear by wildcard pattern', function (done) {
+    var options = {
+      key: 'test:1',
+      data: 'foo',
+      tags: {bar: 'baz'}
+    };
+    cache.set(options, function (err) {
+      assert.ifError(err);
+      cache.clear('test:*', function (err) {
+        assert.ifError(err);
+        cache.get(options.key, function (err, result) {
+          assert.ifError(err);
+          assert.strictEqual(result, false);
           done();
         });
       });

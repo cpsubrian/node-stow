@@ -45,10 +45,6 @@ Cache.prototype.set = function (key, data, ttl, tags, cb) {
     }
   }
 
-  if (options.tags) {
-    options.tags = this.flattenTags(options.tags);
-  }
-
   if (typeof options.key === 'undefined') {
     throw new Error('No key passed to cache.set()');
   }
@@ -57,6 +53,10 @@ Cache.prototype.set = function (key, data, ttl, tags, cb) {
   }
   if (typeof cb !== 'function') {
     throw new Error('No callback passed to cache.set()');
+  }
+
+  if (options.tags) {
+    options.tags = this.flattenTags(options.tags);
   }
 
   this.backend.set(options, cb);

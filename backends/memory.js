@@ -51,7 +51,20 @@ MemoryBackend.prototype.invalidate = function (tags, cb) {
 };
 
 MemoryBackend.prototype.clear = function (pattern, cb) {
-
+  var backend = this;
+  process.nextTick(function () {
+    if (pattern.indexOf('*') < 0) {
+      delete backend._cache[pattern];
+      cb(null);
+    }
+    else {
+      var reg = globToRegex(pattern);
+      Object.keys(backend._cache).filter(RegExp.prototype.test.bind(reg)).forEach(function (tag) {
+        delete backend._cache[tag];
+      });
+      cb(null);
+    }
+  });
 };
 
 MemoryBackend.prototype.checksum = function (tags, cb) {
@@ -83,5 +96,28 @@ MemoryBackend.prototype.validate = function (item, cb) {
     });
   });
 };
+
+function globToRegex (glob) {
+  var specialChars = "\\^$*+?.()|{}[]";
+  var regexChars = ["^"];
+  for (var i = 0; i < glob.length; ++i) {
+      var c = glob.charAt(i);
+      switch (c) {
+          case '?':
+              regexChars.push(".");
+              break;
+          case '*':
+              regexChars.push(".*");
+              break;
+          default:
+              if (specialChars.indexOf(c) >= 0) {
+                  regexChars.push("\\");
+              }
+              regexChars.push(c);
+      }
+  }
+  regexChars.push("$");
+  return new RegExp(regexChars.join(""));
+}
 
 module.exports = MemoryBackend;

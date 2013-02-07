@@ -3,7 +3,9 @@
   "version": "0.0.0",
   "description": "Caching with a flexible invalidation strategy",
   "main": "stow.js",
-  "dependencies": {},
+  "dependencies": {
+    "hydration": "~0.3.1"
+  },
   "devDependencies": {
     "mocha": "*",
     "clone": "~0.1.5"
