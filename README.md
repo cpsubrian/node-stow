@@ -20,7 +20,7 @@ Usage
 var stow = require('stow');
 
 // Create your cache.
-var cache = stow.createCache(stow.backends.redis, {
+var cache = stow.createCache(stow.backends.Redis, {
   nodes: ['localhost:6379']
 });
 
@@ -149,7 +149,7 @@ for performance or long-term use.
 ```js
 var stow = require('stow')
   , options = {}
-  , cache = stow.createCache(stow.backends.memory, options);
+  , cache = stow.createCache(stow.backends.Memory, options);
 ```
 
 Options:
@@ -167,7 +167,7 @@ var stow = require('stow')
   , options = {
       nodes: ['localhost:6379']
     }
-  , cache = stow.createCache(stow.backends.redis, options);
+  , cache = stow.createCache(stow.backends.Redis, options);
 ```
 
 Options:

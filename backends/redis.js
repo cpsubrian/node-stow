@@ -1,10 +1,10 @@
 
 
 function RedisBackend (options) {
-  options = options || {};
+
 }
 
-RedisBackend.prototype.set = function () {
+RedisBackend.prototype.set = function (options, cb) {
 
 };
 
