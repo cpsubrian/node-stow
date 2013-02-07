@@ -1,6 +1,6 @@
 module.exports = {
-  createCache: function createCache (options) {
-    return new Cache(options);
+  createCache: function createCache (Backend, options) {
+    return new Cache(Backend, options);
   },
   Cache: Cache,
   backends: {
