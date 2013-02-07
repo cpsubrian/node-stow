@@ -13,6 +13,9 @@ function RedisBackend (options) {
   else {
     this.client = redis.createClient(['localhost:6379'], options);
   }
+  if (options.db) {
+    this.client.select(db);
+  }
 }
 
 RedisBackend.prototype.key = function () {
@@ -32,7 +35,13 @@ RedisBackend.prototype.set = function (options, cb) {
   backend.checksum(item.tags, function (err, checksum) {
     if (err) return cb(err);
     item.checksum = checksum;
-    var data = JSON.stringify(hydration.dehydrate(item));
+    var data;
+    try {
+      data = JSON.stringify(hydration.dehydrate(item));
+    }
+    catch (e) {
+      return cb(e);
+    }
     if (item.ttl) {
       backend.client.setex(backend.key(item.key), item.ttl, data, cb);
     }
@@ -46,14 +55,20 @@ RedisBackend.prototype.get = function (key, cb) {
   var backend = this;
   backend.client.get(backend.key(key), function (err, result) {
     if (err) return cb(err);
-    if (!result) return cb(null, false);
-    var item = hydration.hydrate(JSON.parse(result));
+    if (!result) return cb(null, null);
+    var item;
+    try {
+      item = hydration.hydrate(JSON.parse(result));
+    }
+    catch (e) {
+      return cb(e);
+    }
     backend.validate(item, function (err, valid) {
       if (valid) {
         cb(null, item);
       }
       else {
-        cb(null, false);
+        cb(null, null);
       }
     });
   });

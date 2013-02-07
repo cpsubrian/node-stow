@@ -1,7 +1,6 @@
 stow = require('../');
 assert = require('assert');
 util = require('util');
-clone = require('clone');
 redis = require('haredis');
 
 // Test a backend.
@@ -39,7 +38,7 @@ testBackend = function (Backend, options) {
           setTimeout(function () {
             cache.get(key, function (err, result) {
               assert.ifError(err);
-              assert.strictEqual(result, false);
+              assert.strictEqual(result, null);
               done();
             });
           }, 1000);
@@ -69,14 +68,14 @@ testBackend = function (Backend, options) {
       data: 'foo',
       tags: {bar: 'baz'}
     };
-    cache.set(clone(options), function (err) {
+    cache.set(options, function (err) {
       assert.ifError(err);
       cache.invalidate({bar: 'baz'}, function (err) {
         assert.ifError(err);
         cache.get(options.key, function (err, result) {
           assert.ifError(err);
-          assert.strictEqual(result, false);
-          cache.set(clone(options), function (err) {
+          assert.strictEqual(result, null);
+          cache.set(options, function (err) {
             assert.ifError(err);
             cache.get(options.key, function (err, result) {
               assert.ifError(err);
@@ -85,7 +84,7 @@ testBackend = function (Backend, options) {
                 assert.ifError(err);
                 cache.get(options.key, function (err, result) {
                   assert.ifError(err);
-                  assert.strictEqual(result, false);
+                  assert.strictEqual(result, null);
                   done();
                 });
               });
@@ -127,7 +126,7 @@ testBackend = function (Backend, options) {
         assert.ifError(err);
         cache.get(options.key, function (err, result) {
           assert.ifError(err);
-          assert.strictEqual(result, false);
+          assert.strictEqual(result, null);
           done();
         });
       });
@@ -145,7 +144,7 @@ testBackend = function (Backend, options) {
         assert.ifError(err);
         cache.get(options.key, function (err, result) {
           assert.ifError(err);
-          assert.strictEqual(result, false);
+          assert.strictEqual(result, null);
           done();
         });
       });

@@ -8,8 +8,7 @@
     "haredis": "~0.2.8"
   },
   "devDependencies": {
-    "mocha": "*",
-    "clone": "~0.1.5"
+    "mocha": "*"
   },
   "scripts": {
     "test": "make test"

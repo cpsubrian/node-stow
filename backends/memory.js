@@ -17,22 +17,20 @@ MemoryBackend.prototype.set = function (options, cb) {
   backend.checksum(item.tags, function (err, checksum) {
     item.checksum = checksum;
     backend._cache[item.key] = item;
-    process.nextTick(cb);
+    cb();
   });
 };
 
 MemoryBackend.prototype.get = function (key, cb) {
   var backend = this;
-  process.nextTick(function () {
-    var item = backend._cache[key];
-    backend.validate(item, function (err, valid) {
-      if (valid) {
-        cb(null, item);
-      }
-      else {
-        cb(null, false);
-      }
-    });
+  var item = backend._cache[key];
+  backend.validate(item, function (err, valid) {
+    if (valid) {
+      cb(null, item);
+    }
+    else {
+      cb(null, null);
+    }
   });
 };
 
@@ -46,26 +44,24 @@ MemoryBackend.prototype.invalidate = function (tags, cb) {
       backend._tags[tag] = 1;
     }
   });
-  process.nextTick(cb);
+  cb();
 };
 
 MemoryBackend.prototype.clear = function (pattern, cb) {
   var backend = this;
-  process.nextTick(function () {
-    if (pattern === '*') {
-      backend._cache = {};
-    }
-    else if (pattern.indexOf('*') < 0) {
-      delete backend._cache[pattern];
-    }
-    else {
-      var reg = globToRegex(pattern);
-      Object.keys(backend._cache).filter(RegExp.prototype.test.bind(reg)).forEach(function (tag) {
-        delete backend._cache[tag];
-      });
-    }
-    cb(null);
-  });
+  if (pattern === '*') {
+    backend._cache = {};
+  }
+  else if (pattern.indexOf('*') < 0) {
+    delete backend._cache[pattern];
+  }
+  else {
+    var reg = globToRegex(pattern);
+    Object.keys(backend._cache).filter(RegExp.prototype.test.bind(reg)).forEach(function (tag) {
+      delete backend._cache[tag];
+    });
+  }
+  cb(null);
 };
 
 MemoryBackend.prototype.checksum = function (tags, cb) {
@@ -82,19 +78,17 @@ MemoryBackend.prototype.checksum = function (tags, cb) {
 
 MemoryBackend.prototype.validate = function (item, cb) {
   var backend = this;
-  process.nextTick(function () {
-    if (!item) {
+  if (!item) {
+    return cb(null, false);
+  }
+  if (item.ttl && ((item.ttl * 1000) < (Date.now() - item.timestamp))) {
+    return cb(null, false);
+  }
+  backend.checksum(item.tags, function (err, checksum) {
+    if (item.checksum < checksum) {
       return cb(null, false);
     }
-    if (item.ttl && ((item.ttl * 1000) < (Date.now() - item.timestamp))) {
-      return cb(null, false);
-    }
-    backend.checksum(item.tags, function (err, checksum) {
-      if (item.checksum < checksum) {
-        return cb(null, false);
-      }
-      cb(null, true);
-    });
+    cb(null, true);
   });
 };
 

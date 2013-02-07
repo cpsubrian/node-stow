@@ -20,7 +20,9 @@ Cache.prototype.set = function (key, data, ttl, tags, cb) {
 
   // Support set(options, cb) style calling.
   if (typeof key !== 'string') {
-    options = key;
+    Object.keys(key).forEach(function (k) {
+      options[k] = key[k];
+    });
     cb = data;
   }
   // Parse arguments.
@@ -46,13 +48,10 @@ Cache.prototype.set = function (key, data, ttl, tags, cb) {
   }
 
   if (typeof options.key === 'undefined') {
-    throw new Error('No key passed to cache.set()');
+    return cb(new Error('No key passed to cache.set()'));
   }
   if (typeof options.data === 'undefined') {
-    throw new Error('No data passed to cache.set()');
-  }
-  if (typeof cb !== 'function') {
-    throw new Error('No callback passed to cache.set()');
+    return cb(new Error('No data passed to cache.set()'));
   }
 
   if (options.tags) {
