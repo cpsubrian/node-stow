@@ -66,7 +66,7 @@ API
 
 ```js
   var stow = require('stow')
-    , cache = stow.createCache(stow.backends.memory, {ttl: 3600});
+    , cache = stow.createCache(stow.backends.Memory, {ttl: 3600});
 ```
 
 ### stow.backends
