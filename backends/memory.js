@@ -6,7 +6,6 @@ function MemoryBackend (options) {
 
 MemoryBackend.prototype.set = function (options, cb) {
   options.ttl = options.ttl || this.ttl;
-  options.tags = options.tags || [];
   var backend = this;
   var item = {
     key: options.key,
@@ -53,17 +52,19 @@ MemoryBackend.prototype.invalidate = function (tags, cb) {
 MemoryBackend.prototype.clear = function (pattern, cb) {
   var backend = this;
   process.nextTick(function () {
-    if (pattern.indexOf('*') < 0) {
+    if (pattern === '*') {
+      backend._cache = {};
+    }
+    else if (pattern.indexOf('*') < 0) {
       delete backend._cache[pattern];
-      cb(null);
     }
     else {
       var reg = globToRegex(pattern);
       Object.keys(backend._cache).filter(RegExp.prototype.test.bind(reg)).forEach(function (tag) {
         delete backend._cache[tag];
       });
-      cb(null);
     }
+    cb(null);
   });
 };
 
