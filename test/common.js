@@ -26,7 +26,7 @@ testBackend = function (Backend, options) {
     });
   });
 
-  it('should respect TTL', function (done) {
+  it('should respect TTL on cache.set()', function (done) {
     var key = 'test';
     var data = 'foo';
     cache.set(key, data, 2, function (err) {
@@ -57,6 +57,31 @@ testBackend = function (Backend, options) {
           assert.ifError(err);
           assert.equal(result.data, data);
           done();
+        });
+      }, 1250);
+    });
+  });
+
+  it('should respect global ttl', function (done) {
+    var temp = options;
+    temp.ttl = 2;
+    cache = stow.createCache(Backend, temp);
+
+    var key = 'test';
+    var data = 'foo';
+    cache.set(key, data, function (err) {
+      assert.ifError(err);
+      setTimeout(function () {
+        cache.get(key, function (err, result) {
+          assert.ifError(err);
+          assert.equal(result.data, data);
+          setTimeout(function () {
+            cache.get(key, function (err, result) {
+              assert.ifError(err);
+              assert.strictEqual(result, null);
+              done();
+            });
+          }, 1000);
         });
       }, 1250);
     });
