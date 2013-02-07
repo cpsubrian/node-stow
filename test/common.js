@@ -64,35 +64,32 @@ testBackend = function (Backend, options) {
 
   it('should respect cache invalidations', function (done) {
     var options = {
-      key: 'test',
+      key: 'testString',
       data: 'foo',
       tags: {bar: 'baz'}
     };
-    cache.set(options, function (err) {
-      assert.ifError(err);
-      cache.invalidate({bar: 'baz'}, function (err) {
-        assert.ifError(err);
-        cache.get(options.key, function (err, result) {
-          assert.ifError(err);
-          assert.strictEqual(result, null);
-          cache.set(options, function (err) {
-            assert.ifError(err);
-            cache.get(options.key, function (err, result) {
-              assert.ifError(err);
-              assert.equal(result.data, options.data);
-              cache.invalidate({bar: 'baz'}, function (err) {
-                assert.ifError(err);
-                cache.get(options.key, function (err, result) {
-                  assert.ifError(err);
-                  assert.strictEqual(result, null);
-                  done();
-                });
-              });
-            });
-          });
-        });
-      });
-    });
+    testInvalidate(options, {bar: 'baz'}, done);
+  });
+
+  it('should respect numeric tags', function (done) {
+    var options = {
+      key: 'testNumeric',
+      data: 'foo',
+      tags: {lorem: 1}
+    };
+    testInvalidate(options, {lorem: 1}, done);
+  });
+
+  it('should respect arrays of tags', function (done) {
+    var options = {
+      key: 'testArray',
+      data: 'foo',
+      tags: {
+        nums: [1, 2, 7],
+        letters: ['a', 'b', 'c', 'd']
+      }
+    };
+    testInvalidate(options, {nums: 2}, done);
   });
 
   it('should ignore non-matching cache invalidations', function (done) {
@@ -109,6 +106,34 @@ testBackend = function (Backend, options) {
           assert.ifError(err);
           assert.equal(result.data, options.data);
           done();
+        });
+      });
+    });
+  });
+
+  it('should handle multiple items with multiple tags', function (done) {
+    cache.set('coke', 'coke', {id: 4, terms: ['drink', 'soda']}, function (err) {
+      assert.ifError(err);
+      cache.set('sprite', 'sprite', {id: 5, terms: ['drink', 'soda', 'clear']}, function (err) {
+        assert.ifError(err);
+        cache.set('burger', 'burger', {id: 6, terms: ['food', 'beef', 'cheese']}, function (err) {
+          assert.ifError(err);
+          cache.invalidate({terms: 'soda'}, function (err) {
+            assert.ifError(err);
+            cache.get('coke', function (err, result) {
+              assert.ifError(err);
+              assert.strictEqual(result, null);
+              cache.get('sprite', function (err, result) {
+                assert.ifError(err);
+                assert.strictEqual(result, null);
+                cache.get('burger', function (err, result) {
+                  assert.ifError(err);
+                  assert.strictEqual(result.data, 'burger');
+                  done();
+                });
+              });
+            });
+          });
         });
       });
     });
@@ -150,4 +175,34 @@ testBackend = function (Backend, options) {
       });
     });
   });
+
+  // Test helpers:
+  function testInvalidate (options, tags, done) {
+    cache.set(options, function (err) {
+      assert.ifError(err);
+      cache.invalidate(tags, function (err) {
+        assert.ifError(err);
+        cache.get(options.key, function (err, result) {
+          assert.ifError(err);
+          assert.strictEqual(result, null);
+          cache.set(options, function (err) {
+            assert.ifError(err);
+            cache.get(options.key, function (err, result) {
+              assert.ifError(err);
+              assert.equal(result.data, options.data);
+              cache.invalidate(tags, function (err) {
+                assert.ifError(err);
+                cache.get(options.key, function (err, result) {
+                  assert.ifError(err);
+                  assert.strictEqual(result, null);
+                  done();
+                });
+              });
+            });
+          });
+        });
+      });
+    });
+  }
+
 };
