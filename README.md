@@ -41,6 +41,7 @@ cache.set({
 // Retreive from the cache.
 cache.get('my:cache:key', function (err, result) {
   // result.data contains your data.
+  // result is `false` on a cache miss.
 });
 
 // Invalidate items based on one or more tag(s).
