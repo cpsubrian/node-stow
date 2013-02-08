@@ -95,10 +95,11 @@ RedisBackend.prototype.clear = function (pattern, cb) {
     if (!keys || !keys.length) return cb();
     // Batching delete calls. Should do more research here on what limits
     // make sense.
-    var batch;
+    var batch, multi = backend.client.multi();
     while (keys.length) {
-      backend.client.del(keys.splice(0, 500), cb);
+      multi.del(keys.splice(0, 500));
     }
+    multi.exec(cb);
   });
 };
 
