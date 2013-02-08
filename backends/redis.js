@@ -24,11 +24,10 @@ RedisBackend.prototype.key = function () {
 
 RedisBackend.prototype.set = function (options, cb) {
   var backend = this;
-  options.ttl = options.ttl || this.ttl;
   var item = {
     key: options.key,
     data: options.data,
-    ttl: options.ttl,
+    ttl: (typeof options.ttl !== 'undefined') ? options.ttl : this.ttl,
     timestamp: Date.now(),
     tags: options.tags || []
   };

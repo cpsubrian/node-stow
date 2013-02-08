@@ -10,9 +10,9 @@ module.exports = {
 };
 
 function Cache (Backend, options) {
-  options = options || {};
-  options.ttl = options.ttl || 0;
-  this.backend = new Backend(options);
+  var opts = options || {};
+  opts.ttl = opts.ttl || 0;
+  this.backend = new Backend(opts);
 }
 
 Cache.prototype.set = function (key, data, ttl, tags, cb) {
@@ -80,12 +80,7 @@ Cache.prototype.clear = function (pattern, cb) {
 Cache.prototype.flattenTags = function (tags) {
   var norm = [];
   Object.keys(tags).forEach(function (key) {
-    if (!Array.isArray(tags[key])) {
-      tags[key] = [tags[key]];
-    }
-  });
-  Object.keys(tags).forEach(function (key) {
-    tags[key].forEach(function (tag) {
+    (Array.isArray(tags[key]) ? tags[key] : [tags[key]]).forEach(function (tag) {
       var flat = key + ':' + tag;
       if (norm.indexOf(flat) < 0) {
         norm.push(flat);

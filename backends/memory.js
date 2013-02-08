@@ -5,12 +5,11 @@ function MemoryBackend (options) {
 }
 
 MemoryBackend.prototype.set = function (options, cb) {
-  options.ttl = options.ttl || this.ttl;
   var backend = this;
   var item = {
     key: options.key,
     data: options.data,
-    ttl: options.ttl,
+    ttl: (typeof options.ttl !== 'undefined') ? options.ttl : this.ttl,
     timestamp: Date.now(),
     tags: options.tags || []
   };
