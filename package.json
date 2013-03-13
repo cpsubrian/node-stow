@@ -4,7 +4,7 @@
   "description": "Caching with a flexible invalidation strategy",
   "main": "stow.js",
   "dependencies": {
-    "hydration": "~0.3.1",
+    "hydration": "~0.4.0",
     "haredis": "~0.2.8"
   },
   "devDependencies": {
