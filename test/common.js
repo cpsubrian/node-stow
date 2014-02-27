@@ -47,6 +47,38 @@ testBackend = function (Backend, options) {
     });
   });
 
+  it('should remove expired items', function (done) {
+    var items = [
+      { key: 'test1', data: 'foo'},
+      { key: 'test2', data: 'bar'}
+    ];
+    cache.set(items[0].key, items[0].data, function (err) {
+      assert.ifError(err);
+      cache._length(function (err, length) {
+        assert.ifError(err);
+        assert.equal(length, 1);
+        cache.set(items[1].key, items[1].data, 1, function (err) {
+          assert.ifError(err);
+          cache._length(function (err, length) {
+            assert.ifError(err);
+            assert.equal(length, 2);
+            setTimeout(function () {
+              cache.get(items[1].key, function (err, result) {
+                assert.ifError(err);
+                assert.strictEqual(result, null);
+                cache._length(function (err, length) {
+                  assert.ifError(err);
+                  assert.equal(length, 1);
+                  done();
+                });
+              });
+            }, 1250);
+          });
+        });
+      });
+    });
+  });
+
   it('should respect TTL 0 (unlimited)', function (done) {
     var key = 'test';
     var data = 'foo';

@@ -12,5 +12,11 @@ describe('Redis Backend', function () {
     });
   });
 
+  stow.backends.Redis.prototype._length = function (cb) {
+    this.client.keys(this.key('*'), function (err, keys) {
+      if (err) return cb(err);
+      cb(null, keys.length);
+    });
+  };
   testBackend(stow.backends.Redis, options);
 });
