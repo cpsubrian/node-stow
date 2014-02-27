@@ -81,7 +81,9 @@ MemoryBackend.prototype.validate = function (item, cb) {
     return cb(null, false);
   }
   if (item.ttl && ((item.ttl * 1000) < (Date.now() - item.timestamp))) {
-    return cb(null, false);
+    return backend.clear(item.key, function () {
+      cb(null, false);
+    });
   }
   backend.checksum(item.tags, function (err, checksum) {
     if (item.checksum < checksum) {
