@@ -10,6 +10,12 @@ describe('Cache class', function () {
 
     function Backend() {}
 
+    before(function () {
+      stow.Cache.prototype._length = function (cb) {
+        this.backend._length(cb);
+      };
+    });
+
     beforeEach(function () {
       cache = new stow.Cache(Backend);
     });
@@ -76,7 +82,7 @@ describe('Cache class', function () {
       cache = new stow.Cache(Backend);
     });
 
-    it('should with with primatives', function () {
+    it('should work with primatives', function () {
       var tags = {
         foo: 'bar'
       };
