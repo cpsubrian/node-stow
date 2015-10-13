@@ -1,5 +1,4 @@
-var redis = require('haredis')
-  , hydration = require('hydration');
+var redis = require('redis');
 
 function RedisBackend (options) {
   this.ttl = options.ttl;
@@ -36,7 +35,6 @@ RedisBackend.prototype.set = function (options, cb) {
     item.checksum = checksum;
     var data;
     try {
-      // data = JSON.stringify(hydration.dehydrate(item));
 	   data = JSON.stringify(item);
     }
     catch (e) {
@@ -58,7 +56,7 @@ RedisBackend.prototype.get = function (key, cb) {
     if (!result) return cb(null, null);
     var item;
     try {
-      item = hydration.hydrate(JSON.parse(result));
+      item = JSON.parse(result);
     }
     catch (e) {
       return cb(e);
