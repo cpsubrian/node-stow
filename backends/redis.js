@@ -36,7 +36,8 @@ RedisBackend.prototype.set = function (options, cb) {
     item.checksum = checksum;
     var data;
     try {
-      data = JSON.stringify(hydration.dehydrate(item));
+      // data = JSON.stringify(hydration.dehydrate(item));
+	   data = JSON.stringify(item);
     }
     catch (e) {
       return cb(e);
