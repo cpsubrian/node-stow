@@ -21,7 +21,7 @@ var stow = require('stow');
 
 // Create your cache.
 var cache = stow.createCache(stow.backends.Redis, {
-  nodes: ['localhost:6379']
+  redis: 'localhost:6379'
 });
 
 // Add items to the cache.
