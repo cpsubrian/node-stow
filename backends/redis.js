@@ -1,5 +1,4 @@
-var redis = require('haredis')
-  , hydration = require('hydration');
+var redis = require('redis');
 
 function RedisBackend (options) {
   this.ttl = options.ttl;
@@ -7,11 +6,11 @@ function RedisBackend (options) {
   if (options.client) {
     this.client = options.client;
   }
-  else if (options.nodes) {
-    this.client = redis.createClient(options.nodes, options);
+  else if (options) {
+    this.client = redis.createClient(options.redis, options);
   }
   else {
-    this.client = redis.createClient(['localhost:6379'], options);
+    this.client = redis.createClient('localhost:6379', options);
   }
   if (options.db) {
     this.client.select(db);
@@ -36,7 +35,7 @@ RedisBackend.prototype.set = function (options, cb) {
     item.checksum = checksum;
     var data;
     try {
-      data = JSON.stringify(hydration.dehydrate(item));
+	   data = JSON.stringify(item);
     }
     catch (e) {
       return cb(e);
@@ -57,7 +56,7 @@ RedisBackend.prototype.get = function (key, cb) {
     if (!result) return cb(null, null);
     var item;
     try {
-      item = hydration.hydrate(JSON.parse(result));
+      item = JSON.parse(result);
     }
     catch (e) {
       return cb(e);

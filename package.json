@@ -1,11 +1,10 @@
 {
   "name": "stow",
-  "version": "0.0.6",
+  "version": "0.0.8",
   "description": "Caching with a flexible invalidation strategy",
   "main": "stow.js",
   "dependencies": {
-    "hydration": "~0.4.0",
-    "haredis": "~0.2.8"
+    "redis": "^2.2.5"
   },
   "devDependencies": {
     "mocha": "*"

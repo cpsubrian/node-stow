@@ -1,7 +1,7 @@
 stow = require('../');
 assert = require('assert');
 util = require('util');
-redis = require('haredis');
+redis = require('redis');
 
 // Test a backend.
 testBackend = function (Backend, options) {
