@@ -159,6 +159,31 @@ Options:
 - `ttl` - Default TTL to use for ALL cached items. Can be overriden per cache
   set. Defaults to 0 (unlimited).
 
+### Mongo Backend
+
+The Mongo backend stores cached items in MongoDB.
+It uses TTL support baked into Mongo and is otherwise optimized for production use.
+
+```js
+var stow = require('stow')
+var MongoBackend = require('stow/backends/mongo')
+var MongoClient = require('mongodb').MongoClient
+var options = {}
+
+MongoClient.connect('mongodb://localhost:27017/my_db', function (err, db) {
+  if (err) return done(err)
+  options.db = db
+  var cache = stow.createCache(RedisBackend, options);
+})
+```
+
+Options:
+
+- `db` - The backend will use this mongodb-native database object.
+- `ttl` - Default TTL to use for ALL cached items. Can be overriden per cache
+  set. Defaults to 0 (unlimited).
+- `coll` - A string used to name the cache and cache_tags collections. Default: 'stow'.
+
 ### Redis Backend
 
 The Redis backend stores cached items in Redis.
