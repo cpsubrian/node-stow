@@ -17,17 +17,20 @@ Usage
 -----
 
 ```js
-var stow = require('stow');
+var stow = require('stow')
+var RedisBackend = require('stow/backends/redis')
+var redis = require('redis')
 
 // Create your cache.
-var cache = stow.createCache(stow.backends.Redis, {
-  nodes: ['localhost:6379']
-});
+var cache = stow.createCache(RedisBackend, {
+  client: redis.createClient()
+})
 
 // Add items to the cache.
 cache.set('my:cache:key', 'my data', {'user': 47, 'comment': [4, 82, 199]}, function (err) {
+  // Handle error
+})
 
-});
 // Or use an options hash.
 cache.set({
   key: 'my:cache:key',
@@ -35,24 +38,24 @@ cache.set({
   ttl: 3600 * 24, // TTL in seconds
   tags: {user: 52}
 }, function (err) {
-
-});
+  // Handle error
+})
 
 // Retreive from the cache.
 cache.get('my:cache:key', function (err, result) {
   // result.data contains your data.
   // result is `false` on a cache miss.
-});
+})
 
 // Invalidate items based on one or more tag(s).
 cache.invalidate({'user': 47}, function (err) {
   // Cached data 'tagged' with user 47 was invalidated.
-});
+})
 
 // Clear items (using wildcard)
 cache.clear('my:cache:*', function (err) {
-
-});
+  // Handle error
+})
 ```
 
 API
@@ -66,12 +69,9 @@ API
 
 ```js
   var stow = require('stow')
-    , cache = stow.createCache(stow.backends.Memory, {ttl: 3600});
+  var MemoryBackend = require('stow/backends/memory')
+  var cache = stow.createCache(MemoryBackend, {ttl: 3600})
 ```
-
-### stow.backends
-
-An object containing stow's bundled backends classes.
 
 ### stow.Cache (Class)
 
@@ -149,8 +149,9 @@ for performance or long-term use.
 
 ```js
 var stow = require('stow')
-  , options = {}
-  , cache = stow.createCache(stow.backends.Memory, options);
+var MemoryBackend = require('stow/backends/memory')
+var options = {}
+var cache = stow.createCache(MemoryBackend, options)
 ```
 
 Options:
@@ -160,15 +161,17 @@ Options:
 
 ### Redis Backend
 
-The Redis backend stores cached items in Redis via [haredis](https://github.com/carlos8f/haredis).
+The Redis backend stores cached items in Redis.
 It uses TTL support baked into Redis and is otherwise optimized for production use.
 
 ```js
 var stow = require('stow')
-  , options = {
-      nodes: ['localhost:6379']
-    }
-  , cache = stow.createCache(stow.backends.Redis, options);
+var RedisBackend = require('stow/backends/redis')
+var redis = require('redis')
+var options = {
+  client: redis.createClient
+}
+var cache = stow.createCache(RedisBackend, options);
 ```
 
 Options:
@@ -196,7 +199,7 @@ strategy firm located in Aptos, CA and Washington, D.C.
 - - -
 
 ### License: MIT
-Copyright (C) 2013 Terra Eclipse, Inc. ([http://www.terraeclipse.com](http://www.terraeclipse.com))
+Copyright (C) 2016 Terra Eclipse, Inc. ([http://www.terraeclipse.com](http://www.terraeclipse.com))
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the &quot;Software&quot;), to deal
