@@ -176,9 +176,7 @@ var cache = stow.createCache(RedisBackend, options);
 
 Options:
 
-- `nodes` - The backend will create a redis client connected these nodes.
-  Supports all node formats that haredis does.
-- `client` - Overrides `nodes`. The backend will use this redis client.
+- `client` - The backend will use this redis client.
 - `ttl` - Default TTL to use for ALL cached items. Can be overriden per cache
   set. Defaults to 0 (unlimited).
 - `prefix` - A string to prefix all redis keys with. Default: 'stow:'.
