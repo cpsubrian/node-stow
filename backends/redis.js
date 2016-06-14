@@ -1,16 +1,10 @@
-var redis = require('haredis')
 var hydration = require('hydration')
 
 function RedisBackend (options) {
   this.ttl = options.ttl
   this.prefix = options.prefix || 'stow:'
-  if (options.client) {
-    this.client = options.client
-  } else if (options.nodes) {
-    this.client = redis.createClient(options.nodes, options)
-  } else {
-    this.client = redis.createClient(['localhost:6379'], options)
-  } if (options.db) {
+  this.client = options.client
+  if (options.db) {
     this.client.select(options.db)
   }
 }

@@ -1,8 +1,6 @@
 /* eslint-env node, mocha */
 var assert = global.assert = require('assert')
 var stow = global.stow = require('../')
-global.redis = require('haredis')
-global.util = require('util')
 
 // Test a backend.
 global.testBackend = function (Backend, options) {

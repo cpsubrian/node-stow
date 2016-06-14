@@ -1,5 +1,7 @@
 /* eslint-env node, mocha */
-/* global redis, testBackend */
+/* global testBackend */
+var redis = require('haredis')
+
 describe('Redis Backend', function () {
   var Backend = require('../backends/redis')
   var client = redis.createClient(['localhost:6379'])
