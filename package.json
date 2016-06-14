@@ -4,14 +4,18 @@
   "description": "Caching with a flexible invalidation strategy",
   "main": "stow.js",
   "dependencies": {
-    "hydration": "~0.4.0",
-    "haredis": "~0.2.8"
+    "hydration": "~1.0.0"
   },
   "devDependencies": {
+    "babel-eslint": "^6.0.4",
+    "haredis": "~0.2.15",
     "mocha": "*"
   },
   "scripts": {
     "test": "make test"
+  },
+  "standard": {
+    "parser": "babel-eslint"
   },
   "repository": {
     "type": "git",
