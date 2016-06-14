@@ -10,6 +10,13 @@ describe('Redis Backend', function () {
     prefix: 'stow:test:' + Date.now() + ':'
   }
 
+  Backend.prototype._length = function (cb) {
+    this.client.keys(this.key('*'), function (err, keys) {
+      if (err) return cb(err)
+      cb(null, keys.length)
+    })
+  }
+
   after(function (done) {
     client.keys(options.prefix + '*', function (err, keys) {
       if (err) return done(err)
@@ -17,11 +24,5 @@ describe('Redis Backend', function () {
     })
   })
 
-  Backend.prototype._length = function (cb) {
-    this.client.keys(this.key('*'), function (err, keys) {
-      if (err) return cb(err)
-      cb(null, keys.length)
-    })
-  }
   testBackend(Backend, options)
 })

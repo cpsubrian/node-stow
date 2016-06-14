@@ -11,12 +11,6 @@ describe('Cache class', function () {
 
     function Backend () {}
 
-    before(function () {
-      stow.Cache.prototype._length = function (cb) {
-        this.backend._length(cb)
-      }
-    })
-
     beforeEach(function () {
       cache = new stow.Cache(Backend)
     })
