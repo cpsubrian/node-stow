@@ -85,8 +85,8 @@ MongoBackend.prototype.checksum = function (tags, cb) {
       if (err) return cb(err)
       if (!items || !items.length) return cb(null, 0)
       var checksum = items.reduce(function (prev, next) {
-        return prev.invalidations + next.invalidations
-      }, {invalidations: 0})
+        return prev + next.invalidations
+      }, 0)
       cb(null, checksum)
     })
   } else {

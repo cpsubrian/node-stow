@@ -70,6 +70,9 @@ Cache.prototype.clear = function (pattern, cb) {
 }
 
 Cache.prototype.flattenTags = function (tags) {
+  if (Array.isArray(tags)) {
+    return tags
+  }
   var norm = []
   Object.keys(tags).forEach(function (key) {
     (Array.isArray(tags[key]) ? tags[key] : [tags[key]]).forEach(function (tag) {

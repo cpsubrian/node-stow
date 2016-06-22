@@ -93,12 +93,12 @@ global.testBackend = function (Backend, options) {
     var options = {
       key: 'testString',
       data: 'foo',
-      tags: {bar: 'baz'}
+      tags: {players: ['Rivers', 'Gates', 'Floyd', 'Brees', 'Cooks', 'Thomas']}
     }
-    testInvalidate(options, {bar: 'baz'}, done)
+    testInvalidate(options, {players: ['Rivers', 'Floyd', 'Cooks']}, done)
   })
 
-  it('should respect numeric tags', function (done) {
+  it('should respect numeric tag "ids"', function (done) {
     var options = {
       key: 'testNumeric',
       data: 'foo',
@@ -107,7 +107,7 @@ global.testBackend = function (Backend, options) {
     testInvalidate(options, {lorem: 1}, done)
   })
 
-  it('should respect arrays of tags', function (done) {
+  it('should respect arrays of tag "ids"', function (done) {
     var options = {
       key: 'testArray',
       data: 'foo',
@@ -117,6 +117,15 @@ global.testBackend = function (Backend, options) {
       }
     }
     testInvalidate(options, {nums: 2}, done)
+  })
+
+  it('should respect arrays of tags', function (done) {
+    var options = {
+      key: 'testArray',
+      data: 'foo',
+      tags: ['fruits:apple', 'fruits:banana']
+    }
+    testInvalidate(options, {fruits: 'apple'}, done)
   })
 
   it('should ignore non-matching cache invalidations', function (done) {
