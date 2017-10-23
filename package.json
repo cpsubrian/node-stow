@@ -10,7 +10,7 @@
   "devDependencies": {
     "babel-eslint": "^6.0.4",
     "haredis": "~0.2.15",
-    "mocha": "*",
+    "mocha": "^3.5.3",
     "mongodb": "^2.1.18"
   },
   "scripts": {
