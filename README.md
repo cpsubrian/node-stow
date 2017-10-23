@@ -156,8 +156,9 @@ var cache = stow.createCache(MemoryBackend, options)
 
 Options:
 
-- `ttl` - Default TTL to use for ALL cached items. Can be overriden per cache
-  set. Defaults to 0 (unlimited).
+- `max` - The maximum number of items to store in the cache. Helps prevent memory leaks. Defaults to 5000.
+- `ttl` - Default TTL (in seconds) to use for ALL cached items. Can be overriden per cache
+  set. Defaults to 24 hours.
 
 ### Mongo Backend
 

@@ -5,7 +5,8 @@
   "main": "stow.js",
   "dependencies": {
     "async": "^2.0.0-rc.6",
-    "hydration": "~1.0.0"
+    "hydration": "~1.0.0",
+    "lru-cache": "^4.1.1"
   },
   "devDependencies": {
     "babel-eslint": "^6.0.4",

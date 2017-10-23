@@ -1,9 +1,13 @@
+var LRU = require('lru-cache')
 var globToRegex = require('../globToRegex')
 
 function MemoryBackend (options) {
-  this._cache = {}
+  this._cache = LRU({
+    max: options.max || 5000,
+    maxAge: (options.ttl * 1000) || (1000 * 60 * 60 * 24)
+  })
   this._tags = {}
-  this.ttl = options.ttl
+  this.ttl = options.ttl || (1000 * 60 * 60 * 24)
 }
 
 MemoryBackend.prototype.set = function (options, cb) {
@@ -18,22 +22,27 @@ MemoryBackend.prototype.set = function (options, cb) {
   backend.checksum(item.tags, function (err, checksum) {
     if (err) return cb(err)
     item.checksum = checksum
-    backend._cache[item.key] = item
+    backend._cache.set(item.key, item, (item.ttl * 1000))
     cb()
   })
 }
 
 MemoryBackend.prototype.get = function (key, cb) {
   var backend = this
-  var item = backend._cache[key]
-  backend.validate(item, function (err, valid) {
-    if (err) return cb(err)
-    if (valid) {
-      cb(null, item)
-    } else {
-      cb(null, null)
-    }
-  })
+  var item = backend._cache.get(key)
+  if (item) {
+    backend.validate(item, function (err, valid) {
+      if (err) return cb(err)
+      if (valid) {
+        cb(null, item)
+      } else {
+        backend._cache.del(key)
+        cb(null, null)
+      }
+    })
+  } else {
+    cb(null, null)
+  }
 }
 
 MemoryBackend.prototype.invalidate = function (tags, cb) {
@@ -50,16 +59,23 @@ MemoryBackend.prototype.invalidate = function (tags, cb) {
 
 MemoryBackend.prototype.clear = function (pattern, cb) {
   var backend = this
+
   if (pattern === '*') {
-    backend._cache = {}
-  } else if (pattern.indexOf('*') < 0) {
-    delete backend._cache[pattern]
-  } else {
-    var reg = globToRegex(pattern)
-    Object.keys(backend._cache).filter(RegExp.prototype.test.bind(reg)).forEach(function (tag) {
-      delete backend._cache[tag]
-    })
+    backend._cache.reset()
+    return cb(null)
   }
+
+  var reg = null
+  if (pattern.indexOf('*') < 0) {
+    reg = new RegExp(pattern)
+  } else {
+    reg = globToRegex(pattern)
+  }
+  backend._cache.forEach(function (value, key, cache) {
+    if (key.match(reg)) {
+      cache.del(key)
+    }
+  })
   cb(null)
 }
 
