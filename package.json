@@ -1,6 +1,6 @@
 {
   "name": "stow",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "description": "Caching with a flexible invalidation strategy",
   "main": "stow.js",
   "dependencies": {
