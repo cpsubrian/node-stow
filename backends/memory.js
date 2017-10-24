@@ -1,4 +1,5 @@
 var LRU = require('lru-cache')
+var hydration = require('hydration')
 var globToRegex = require('../globToRegex')
 
 function MemoryBackend (options) {
@@ -22,15 +23,30 @@ MemoryBackend.prototype.set = function (options, cb) {
   backend.checksum(item.tags, function (err, checksum) {
     if (err) return cb(err)
     item.checksum = checksum
-    backend._cache.set(item.key, item, (item.ttl * 1000))
+
+    var data
+    try {
+      data = JSON.stringify(hydration.dehydrate(item))
+    } catch (e) {
+      return cb(e)
+    }
+
+    backend._cache.set(item.key, data, (item.ttl * 1000))
     cb()
   })
 }
 
 MemoryBackend.prototype.get = function (key, cb) {
   var backend = this
-  var item = backend._cache.get(key)
-  if (item) {
+  var data = backend._cache.get(key)
+  if (data) {
+    var item
+    try {
+      item = hydration.hydrate(JSON.parse(data))
+    } catch (e) {
+      return cb(e)
+    }
+
     backend.validate(item, function (err, valid) {
       if (err) return cb(err)
       if (valid) {
