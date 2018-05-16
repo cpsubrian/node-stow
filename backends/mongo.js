@@ -37,7 +37,7 @@ MongoBackend.prototype.set = function (options, cb) {
     } else {
       item.expireAt = null
     }
-    backend.coll.updateOne({_id: item.key}, item, {upsert: true}, cb)
+    backend.coll.replaceOne({_id: item.key}, item, {upsert: true}, cb)
   })
 }
 
