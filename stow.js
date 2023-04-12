@@ -1,86 +1,97 @@
+// Export the createCache function and the Cache constructor
 module.exports = {
-  createCache: function createCache (Backend, options) {
-    return new Cache(Backend, options)
-  },
-  Cache: Cache
+  createCache: (Backend, options) => new Cache(Backend, options),
+  Cache,
+};
+
+// Cache constructor
+function Cache(Backend, options = {}) {
+  // Set default options and merge with provided options
+  const opts = {
+    ttl: 0,
+    ...options,
+  };
+  // Initialize backend with options
+  this.backend = new Backend(opts);
 }
 
-function Cache (Backend, options) {
-  var opts = options || {}
-  opts.ttl = opts.ttl || 0
-  this.backend = new Backend(opts)
-}
-
+// Set method for the Cache prototype
 Cache.prototype.set = function (key, data, ttl, tags, cb) {
-  var options = {}
+  let options = {};
 
-  // Support set(options, cb) style calling.
-  if (typeof key !== 'string') {
-    Object.keys(key).forEach(function (k) {
-      options[k] = key[k]
-    })
-    cb = data
-  // Parse arguments.
+  // If the first argument is an object, copy its properties to options
+  if (typeof key !== "string") {
+    options = { ...key };
+    cb = data;
   } else {
-    options.key = key
-    options.data = data
-    if (typeof ttl === 'function') {
-      cb = ttl
-    } else if (typeof tags === 'function') {
-      cb = tags
-      if (typeof ttl === 'number') {
-        options.ttl = ttl
+    // Otherwise, set options based on the provided arguments
+    options.key = key;
+    options.data = data;
+    if (typeof ttl === "function") {
+      cb = ttl;
+    } else if (typeof tags === "function") {
+      cb = tags;
+      if (typeof ttl === "number") {
+        options.ttl = ttl;
       } else {
-        options.tags = ttl
+        options.tags = ttl;
       }
     } else {
-      options.ttl = ttl
-      options.tags = tags
+      options.ttl = ttl;
+      options.tags = tags;
     }
   }
 
-  if (typeof options.key === 'undefined') {
-    return cb(new Error('No key passed to cache.set()'))
+  // Validate options and call the callback with an error if necessary
+  if (typeof options.key === "undefined") {
+    return cb(new Error("No key passed to cache.set()"));
   }
-  if (typeof options.data === 'undefined') {
-    return cb(new Error('No data passed to cache.set()'))
+  if (typeof options.data === "undefined") {
+    return cb(new Error("No data passed to cache.set()"));
   }
 
+  // Flatten tags if they exist
   if (options.tags) {
-    options.tags = this.flattenTags(options.tags)
+    options.tags = this.flattenTags(options.tags);
   }
 
-  this.backend.set(options, cb)
-}
+  // Call the backend set method with the options and callback
+  this.backend.set(options, cb);
+};
 
+// Get method for the Cache prototype
 Cache.prototype.get = function (key, cb) {
-  this.backend.get(key, cb)
-}
+  this.backend.get(key, cb);
+};
 
+// Invalidate method for the Cache prototype
 Cache.prototype.invalidate = function (tags, cb) {
-  this.backend.invalidate(this.flattenTags(tags), cb)
-}
+  this.backend.invalidate(this.flattenTags(tags), cb);
+};
 
+// Clear method for the Cache prototype
 Cache.prototype.clear = function (pattern, cb) {
-  if (typeof pattern === 'function') {
-    cb = pattern
-    pattern = '*'
+  if (typeof pattern === "function") {
+    cb = pattern;
+    pattern = "*";
   }
-  this.backend.clear(pattern, cb)
-}
+  this.backend.clear(pattern, cb);
+};
 
+// Flatten tags helper method
 Cache.prototype.flattenTags = function (tags) {
+  // If tags is already an array, return it
   if (Array.isArray(tags)) {
-    return tags
+    return tags;
   }
-  var norm = []
-  Object.keys(tags).forEach(function (key) {
-    (Array.isArray(tags[key]) ? tags[key] : [tags[key]]).forEach(function (tag) {
-      var flat = key + ':' + tag
-      if (norm.indexOf(flat) < 0) {
-        norm.push(flat)
-      }
-    })
-  })
-  return norm
-}
+  // Use a Set to store unique flattened tags
+  const norm = new Set();
+  // Iterate through tag keys and values, flatten them, and add to the Set
+  Object.keys(tags).forEach((key) =>
+    (Array.isArray(tags[key]) ? tags[key] : [tags[key]]).forEach((tag) =>
+      norm.add(`${key}:${tag}`)
+    )
+  );
+  // Convert the Set back to an array and return it
+  return Array.from(norm);
+};
