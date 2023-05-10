@@ -1,86 +1,106 @@
+const Cache = (function() {
+  function Cache(backend, options) {
+    this.backend = backend;
+    this.options = options || {};
+  }
+
+  Cache.prototype.set = function(key, data, ttl, tags, cb) {
+    if (typeof key !== 'string') {
+      throw new Error('Invalid key type');
+    }
+
+    const options = {
+      key,
+      data,
+      ttl,
+      tags
+    };
+
+    if (typeof cb !== 'function') {
+      throw new Error('Invalid callback type');
+    }
+
+    this.backend.set(options, cb);
+  };
+
+  Cache.prototype.get = function(key, cb) {
+    if (typeof key !== 'string') {
+      throw new Error('Invalid key type');
+    }
+
+    const options = {
+      key
+    };
+
+    if (typeof cb !== 'function') {
+      throw new Error('Invalid callback type');
+    }
+
+    this.backend.get(options, cb);
+  };
+
+  Cache.prototype.invalidate = function(tags, cb) {
+    if (typeof tags !== 'object') {
+      throw new Error('Invalid tags type');
+    }
+
+    const options = {
+      tags: this.flattenTags(tags)
+    };
+
+    if (typeof cb !== 'function') {
+      throw new Error('Invalid callback type');
+    }
+
+    this.backend.invalidate(options, cb);
+  };
+
+  Cache.prototype.clear = function(pattern, cb) {
+    if (typeof pattern !== 'string') {
+      throw new Error('Invalid pattern type');
+    }
+
+    const options = {
+      pattern
+    };
+
+    if (typeof cb !== 'function') {
+      throw new Error('Invalid callback type');
+    }
+
+    this.backend.clear(options, cb);
+  };
+
+  Cache.prototype.flattenTags = function(tags) {
+    if (!tags) {
+      return [];
+    }
+
+    const norm = [];
+
+    for (const key in tags) {
+      if (tags.hasOwnProperty(key)) {
+        const tag = tags[key];
+
+        if (Array.isArray(tag)) {
+          for (const t of tag) {
+            norm.push(key + ':' + t);
+          }
+        } else {
+          norm.push(key + ':' + tag);
+        }
+      }
+    }
+
+    return norm;
+  };
+
+  return Cache;
+})();
+
 module.exports = {
-  createCache: function createCache (Backend, options) {
-    return new Cache(Backend, options)
+  createCache: function createCache(Backend, options) {
+    return new Cache(Backend, options);
   },
   Cache: Cache
-}
-
-function Cache (Backend, options) {
-  var opts = options || {}
-  opts.ttl = opts.ttl || 0
-  this.backend = new Backend(opts)
-}
-
-Cache.prototype.set = function (key, data, ttl, tags, cb) {
-  var options = {}
-
-  // Support set(options, cb) style calling.
-  if (typeof key !== 'string') {
-    Object.keys(key).forEach(function (k) {
-      options[k] = key[k]
-    })
-    cb = data
-  // Parse arguments.
-  } else {
-    options.key = key
-    options.data = data
-    if (typeof ttl === 'function') {
-      cb = ttl
-    } else if (typeof tags === 'function') {
-      cb = tags
-      if (typeof ttl === 'number') {
-        options.ttl = ttl
-      } else {
-        options.tags = ttl
-      }
-    } else {
-      options.ttl = ttl
-      options.tags = tags
-    }
-  }
-
-  if (typeof options.key === 'undefined') {
-    return cb(new Error('No key passed to cache.set()'))
-  }
-  if (typeof options.data === 'undefined') {
-    return cb(new Error('No data passed to cache.set()'))
-  }
-
-  if (options.tags) {
-    options.tags = this.flattenTags(options.tags)
-  }
-
-  this.backend.set(options, cb)
-}
-
-Cache.prototype.get = function (key, cb) {
-  this.backend.get(key, cb)
-}
-
-Cache.prototype.invalidate = function (tags, cb) {
-  this.backend.invalidate(this.flattenTags(tags), cb)
-}
-
-Cache.prototype.clear = function (pattern, cb) {
-  if (typeof pattern === 'function') {
-    cb = pattern
-    pattern = '*'
-  }
-  this.backend.clear(pattern, cb)
-}
-
-Cache.prototype.flattenTags = function (tags) {
-  if (Array.isArray(tags)) {
-    return tags
-  }
-  var norm = []
-  Object.keys(tags).forEach(function (key) {
-    (Array.isArray(tags[key]) ? tags[key] : [tags[key]]).forEach(function (tag) {
-      var flat = key + ':' + tag
-      if (norm.indexOf(flat) < 0) {
-        norm.push(flat)
-      }
-    })
-  })
-  return norm
-}
+};
